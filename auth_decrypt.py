@@ -6,7 +6,6 @@ from datetime import datetime
 from Crypto.PublicKey import RSA
 from Crypto.Util.number import bytes_to_long
 from Crypto.Util.number import long_to_bytes
-from struct import unpack
 from hashlib import sha256
 
 def get_args():
@@ -74,13 +73,13 @@ def decode_license_serial(lic):
 	start = index + 1
 	end = start + lic[index]
 
-	end 		= unpack('>I', lic[0:4])[0]
-	watermark 	= unpack('>I', lic[4:8])[0]
+	end 		= int.from_bytes(lic[0:4], byteorder="big")
+	watermark 	= int.from_bytes(lic[4:8], byteorder="big")
 	version     = str(lic[8])
 	key         = sha256(lic[start:end]).hexdigest()
 
 	if end == 29999999:
-		end = 'No End Date'
+		end = 'No end date'
 	else:
 		end = datetime.strptime(end, '%y%m%d').strftime('%b %d %Y')
 
@@ -101,7 +100,6 @@ def print_license_gz(license):
 	print('Issued at:\t{0}'.format(license['issued'].strftime('%b %d %Y %H:%M:%S')))
 
 def print_license_serial(license):
-
 	print ('=== Cobalt Strike auth file details ===')
 	print('License AES key:\t{0}'.format(license['key'][0:16]))
 	print('License HMAC:\t\t{0}'.format(license['key'][16:32]))
