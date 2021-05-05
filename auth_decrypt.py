@@ -117,6 +117,8 @@ def main():
 	elif header == b'\xca\xfe\xc0\xd3':
 		license = decode_license_serial(lic)
 		print_license_serial(license)
+	print('Invalid header!')
+		exit(1)
 
 if __name__ == '__main__':
 	main()
